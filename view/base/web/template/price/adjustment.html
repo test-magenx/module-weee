@@ -10,26 +10,26 @@
             <span class="weee"
                   data-price-type="weee"
                   attr="'data-label': $adj.getWeeTaxAttributeName($taxAttribute) + ' ' + $t('Incl. tax')"
-                  html="$adj.getWeeeTaxWithoutTaxUnsanitizedHtml($taxAttribute)"></span>
+                  html="$adj.getWeeeTaxWithoutTax($taxAttribute)"/>
 
             <span class="weee"
                   data-price-type="weee"
                   attr="'data-label': $adj.getWeeTaxAttributeName($taxAttribute) + ' ' + $t('Excl. tax')"
-                  html="$adj.getWeeeTaxWithTaxUnsanitizedHtml($taxAttribute)"></span>
+                  html="$adj.getWeeeTaxWithTax($taxAttribute)"/>
         </if>
 
         <if args="$adj.displayPriceInclTax()">
             <span class="weee"
                   data-price-type="weee"
                   attr="'data-label': $adj.getWeeTaxAttributeName($taxAttribute)"
-                  html="$adj.getWeeeTaxWithTaxUnsanitizedHtml($taxAttribute)"></span>
+                  html="$adj.getWeeeTaxWithTax($taxAttribute)"/>
         </if>
 
         <if args="$adj.displayPriceExclTax()">
             <span class="weee"
                   data-price-type="weee"
                   attr="'data-label': $adj.getWeeTaxAttributeName($taxAttribute)"
-                  html="$adj.getWeeeTaxWithoutTaxUnsanitizedHtml($taxAttribute)"></span>
+                  html="$adj.getWeeeTaxWithoutTax($taxAttribute)"/>
         </if>
     </each>
 </if>
@@ -39,5 +39,5 @@
           data-price-type="weeePrice"
           data-price-amount=""
           attr="'data-label': $t('Final Price')"
-          html="$adj.getWeeeAdjustmentUnsanitizedHtml($row())"></span>
+          html="$adj.getWeeeAdjustment($row())"/>
 </if>

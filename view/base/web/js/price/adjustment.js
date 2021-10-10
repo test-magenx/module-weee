@@ -39,16 +39,6 @@ define([
         },
 
         /**
-         * UnsanitizedHtml version of getWeeeTaxWithoutTax.
-         *
-         * @param {Object} taxAmount
-         * @return {HTMLElement} Weee html
-         */
-        getWeeeTaxWithoutTaxUnsanitizedHtml: function (taxAmount) {
-            return this.getWeeeTaxWithoutTax(taxAmount);
-        },
-
-        /**
          * Get Weee with Tax attributes.
          *
          * @param {Object} taxAmount
@@ -56,16 +46,6 @@ define([
          */
         getWeeeTaxWithTax: function (taxAmount) {
             return taxAmount['tax_amount_incl_tax'];
-        },
-
-        /**
-         * UnsanitizedHtml version of getWeeeTaxWithTax.
-         *
-         * @param {Object} taxAmount
-         * @return {HTMLElement} Weee html
-         */
-        getWeeeTaxWithTaxUnsanitizedHtml: function (taxAmount) {
-            return this.getWeeeTaxWithTax(taxAmount);
         },
 
         /**
@@ -108,16 +88,6 @@ define([
          */
         getWeeeAdjustment: function (row) {
             return row['price_info']['extension_attributes']['weee_adjustment'];
-        },
-
-        /**
-         * UnsanitizedHtml version of getWeeeAdjustment.
-         *
-         * @param {Object} row
-         * @return {HTMLElement} Weee final price html
-         */
-        getWeeeAdjustmentUnsanitizedHtml: function (row) {
-            return this.getWeeeAdjustment(row);
         },
 
         /**

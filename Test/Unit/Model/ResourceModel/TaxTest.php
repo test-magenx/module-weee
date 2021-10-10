@@ -44,9 +44,6 @@ class TaxTest extends TestCase
      */
     protected $selectMock;
 
-    /**
-     * @inheritdoc
-     */
     protected function setUp(): void
     {
         $objectManager = new ObjectManager($this);
@@ -75,21 +72,27 @@ class TaxTest extends TestCase
         $this->model = $objectManager->getObject(
             Tax::class,
             [
-                'context' => $contextMock
+                'context' => $contextMock,
             ]
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testInWeeeLocation(): void
+    public function testInWeeeLocation()
     {
-
-        $this->selectMock
+        $this->selectMock->expects($this->at(1))
             ->method('where')
-            ->withConsecutive(['website_id IN(?)', [1, 0]], ['country = ?', 'US'], ['state = ?', 0])
-            ->willReturnOnConsecutiveCalls($this->selectMock, $this->selectMock, $this->selectMock);
+            ->with('website_id IN(?)', [1, 0])
+            ->willReturn($this->selectMock);
+
+        $this->selectMock->expects($this->at(2))
+            ->method('where')
+            ->with('country = ?', 'US')
+            ->willReturn($this->selectMock);
+
+        $this->selectMock->expects($this->at(3))
+            ->method('where')
+            ->with('state = ?', 0)
+            ->willReturn($this->selectMock);
 
         $this->selectMock->expects($this->any())
             ->method('from')
@@ -99,10 +102,7 @@ class TaxTest extends TestCase
         $this->model->isWeeeInLocation('US', 0, 1);
     }
 
-    /**
-     * @return void
-     */
-    public function testFetchWeeeTaxCalculationsByEntity(): void
+    public function testFetchWeeeTaxCalculationsByEntity()
     {
         $this->selectMock->expects($this->any())
             ->method('where')
