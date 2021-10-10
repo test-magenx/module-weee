@@ -5,11 +5,8 @@
  */
 namespace Magento\Weee\Model\Total\Quote;
 
-use Magento\Quote\Api\Data\ShippingAssignmentInterface;
-use Magento\Quote\Model\Quote;
-use Magento\Quote\Model\Quote\Address;
-use Magento\Quote\Model\Quote\Address\Total;
 use Magento\Quote\Model\Quote\Address\Total\AbstractTotal;
+use Magento\Store\Model\Store;
 use Magento\Tax\Model\Sales\Total\Quote\CommonTaxCollector;
 
 class WeeeTax extends Weee
@@ -17,19 +14,19 @@ class WeeeTax extends Weee
     /**
      * Collect Weee taxes amount and prepare items prices for taxation and discount
      *
-     * @param Quote $quote
-     * @param ShippingAssignmentInterface|Address $shippingAssignment
-     * @param Total $total
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Api\Data\ShippingAssignmentInterface|\Magento\Quote\Model\Quote\Address $shippingAssignment
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
      * @return $this
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function collect(
-        Quote $quote,
-        ShippingAssignmentInterface $shippingAssignment,
-        Total $total
+        \Magento\Quote\Model\Quote $quote,
+        \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment,
+        \Magento\Quote\Model\Quote\Address\Total $total
     ) {
-        AbstractTotal::collect($quote, $shippingAssignment, $total);
+        \Magento\Quote\Model\Quote\Address\Total\AbstractTotal::collect($quote, $shippingAssignment, $total);
         $this->_store = $quote->getStore();
         if (!$this->weeeData->isEnabled($this->_store)) {
             return $this;
@@ -68,12 +65,13 @@ class WeeeTax extends Weee
                     $weeeCodeToWeeeTaxDetailsMap[$weeeCode] = $weeeTaxDetails;
                 }
             }
-            $productTaxes = [];
+
             //Process each item that has taxable weee
             foreach ($itemToWeeeCodeMap as $mapping) {
                 $item = $mapping['item'];
 
                 $this->weeeData->setApplied($item, []);
+                $productTaxes = [];
 
                 $totalValueInclTax = 0;
                 $baseTotalValueInclTax = 0;
@@ -115,17 +113,15 @@ class WeeeTax extends Weee
                     $baseTotalRowValueExclTax += $baseRowValueExclTax;
 
                     $productTaxes[] = [
-                        [
-                            'title' => $attributeCode, //TODO: fix this
-                            'base_amount' => $baseValueExclTax,
-                            'amount' => $valueExclTax,
-                            'row_amount' => $rowValueExclTax,
-                            'base_row_amount' => $baseRowValueExclTax,
-                            'base_amount_incl_tax' => $baseValueInclTax,
-                            'amount_incl_tax' => $valueInclTax,
-                            'row_amount_incl_tax' => $rowValueInclTax,
-                            'base_row_amount_incl_tax' => $baseRowValueInclTax,
-                        ],
+                        'title' => $attributeCode, //TODO: fix this
+                        'base_amount' => $baseValueExclTax,
+                        'amount' => $valueExclTax,
+                        'row_amount' => $rowValueExclTax,
+                        'base_row_amount' => $baseRowValueExclTax,
+                        'base_amount_incl_tax' => $baseValueInclTax,
+                        'amount_incl_tax' => $valueInclTax,
+                        'row_amount_incl_tax' => $rowValueInclTax,
+                        'base_row_amount_incl_tax' => $baseRowValueInclTax,
                     ];
                 }
 
@@ -147,11 +143,8 @@ class WeeeTax extends Weee
                     $baseTotalRowValueInclTax
                 );
 
+                $this->weeeData->setApplied($item, array_merge($this->weeeData->getApplied($item), $productTaxes));
             }
-            $this->weeeData->setApplied(
-                $item,
-                array_merge($this->weeeData->getApplied($item), ...$productTaxes)
-            );
         }
         return $this;
     }
@@ -203,7 +196,7 @@ class WeeeTax extends Weee
     /**
      * Process row amount based on FPT total amount configuration setting
      *
-     * @param Total $total
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
      * @param float $rowValueExclTax
      * @param float $baseRowValueExclTax
      * @param float $rowValueInclTax
@@ -233,13 +226,14 @@ class WeeeTax extends Weee
     /**
      * Fetch the Weee total amount for display in totals block when building the initial quote
      *
-     * @param Quote $quote
-     * @param Total $total
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
      * @return array
      */
-    public function fetch(Quote $quote, Total $total)
+    public function fetch(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Model\Quote\Address\Total $total)
     {
-        $items = $total['quote_items'] ?? [];
+        /** @var $items \Magento\Sales\Model\Order\Item[] */
+        $items = isset($total['address_quote_items']) ? $total['address_quote_items'] : [];
 
         $weeeTotal = $this->weeeData->getTotalAmounts($items, $quote->getStore());
         if ($weeeTotal) {

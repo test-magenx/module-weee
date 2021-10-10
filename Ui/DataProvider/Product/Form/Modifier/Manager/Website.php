@@ -28,21 +28,6 @@ class Website
     private $websites;
 
     /**
-     * @var LocatorInterface
-     */
-    private $locator;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
-     * @var DirectoryHelper
-     */
-    private $directoryHelper;
-
-    /**
      * @var Data
      */
     private $catalogHelper;
